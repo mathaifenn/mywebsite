@@ -199,44 +199,78 @@
     © <span id="yr"></span> Mathai Fenn
   </footer>
 
-  <script>
-    // Small helper: show page (and hide intro)
-    function revealPage() {
-      document.getElementById('intro').hidden = true;
-      const page = document.getElementById('pageContent');
-      page.removeAttribute('aria-hidden');
-    }
+<script>
+  // Small helper: show page (and hide intro)
+  function revealPage() {
+    console.log('Revealing page');
+    document.getElementById('intro').hidden = true;
+    const page = document.getElementById('pageContent');
+    page.removeAttribute('aria-hidden');
+  }
 
-    (function init(){
-      document.getElementById('yr').textContent = new Date().getFullYear();
+  (function init(){
+    console.log('Script loaded');
+    
+    document.getElementById('yr').textContent = new Date().getFullYear();
 
-      const vid = document.getElementById('introVideo');
-      const skip = document.getElementById('skipIntro');
-      const sound = document.getElementById('toggleSound');
+    const vid = document.getElementById('introVideo');
+    const skip = document.getElementById('skipIntro');
+    const sound = document.getElementById('toggleSound');
 
-      // When the video ends, reveal page
-      vid.addEventListener('ended', revealPage);
+    console.log('Video element:', vid);
+    console.log('Video source:', vid.src);
 
-      // Skip manually
-      skip.addEventListener('click', () => {
-        try { vid.pause(); } catch(e){}
-        revealPage();
-      });
+    // Debug video events
+    vid.addEventListener('loadeddata', () => {
+      console.log('Video loaded, duration:', vid.duration);
+    });
+    
+    vid.addEventListener('canplay', () => {
+      console.log('Video can play');
+    });
+    
+    vid.addEventListener('error', (e) => {
+      console.error('Video error:', e);
+      console.error('Video error details:', vid.error);
+    });
+    
+    vid.addEventListener('ended', () => {
+      console.log('Video ended');
+      revealPage();
+    });
 
-      // Toggle mute (autoplay policy: starts muted)
-      sound.addEventListener('click', () => {
-        vid.muted = !vid.muted;
-        sound.textContent = vid.muted ? 'Unmute' : 'Mute';
-        sound.setAttribute('aria-pressed', String(!vid.muted));
-        // If user unmutes, ensure it’s playing
-        if (!vid.muted && vid.paused) vid.play().catch(()=>{});
-      });
+    // Skip manually
+    skip.addEventListener('click', () => {
+      console.log('Skip clicked');
+      try { vid.pause(); } catch(e){}
+      revealPage();
+    });
 
-      // If user has reduced motion preference, don’t show intro
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        revealPage();
+    // Toggle mute
+    sound.addEventListener('click', () => {
+      vid.muted = !vid.muted;
+      sound.textContent = vid.muted ? 'Unmute' : 'Mute';
+      sound.setAttribute('aria-pressed', String(!vid.muted));
+      if (!vid.muted && vid.paused) {
+        console.log('Attempting to play unmuted');
+        vid.play().catch(e => console.error('Play failed:', e));
       }
-    })();
-  </script>
+    });
+
+    // Auto-play attempt with error handling
+    setTimeout(() => {
+      if (vid.paused) {
+        console.log('Video paused, attempting play');
+        vid.play().catch(e => console.error('Autoplay failed:', e));
+      }
+    }, 1000);
+
+    // If user has reduced motion preference, don't show intro
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      console.log('Reduced motion preference detected');
+      revealPage();
+    }
+  })();
+</script>
 </body>
 </html>
