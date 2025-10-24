@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mathai Fenn</title>
+
+  <!-- Preload key assets -->
+  <link rel="preload" href="assets/mbfdark.jpg" as="image">
+  <link rel="preload" href="assets/Mathaifenn.mp4" as="video" type="video/mp4">
+
+  <style>
+    :root{
+      --bg:#0b0b0b;
+      --ink:#e0c078;      /* warm gold for text */
+      --ink-dim:#bda260;  /* hover/focus shade */
+      --muted:#888;
+      --maxw:1200px;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family: Georgia, "Times New Roman", Times, serif;
+      line-height:1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Intro video ---------- */
+    .intro{
+      position:fixed;
+      inset:0;
+      background:#000;
+      display:grid;
+      place-items:center;
+      z-index:30;
+    }
+    .intro video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      background:#000;
+    }
+    .intro .controls{
+      position:absolute;
+      inset:auto 1rem 1rem auto;
+      display:flex;
+      gap:.5rem;
+      z-index:40;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.4);
+      background:rgba(0,0,0,.35);
+      color:#fff;
+      padding:.5rem .75rem;
+      border-radius:6px;
+      font: 600 14px/1 Georgia, serif;
+      cursor:pointer;
+      backdrop-filter: blur(4px);
+    }
+    .btn:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.7) }
+
+    /* hidden state after intro */
+    .intro[hidden]{ display:none !important }
+
+    /* ---------- Page layout ---------- */
+    .page{
+      min-height:100%;
+      display:grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: clamp(24px, 4vw, 56px);
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 40px);
+      box-sizing:border-box;
+    }
+    /* Left column */
+    .portrait{
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      gap: 24px;
+      min-height: calc(100vh - clamp(40px, 8vw, 80px));
+      background: url("assets/mbfdark.jpg") left top / cover no-repeat #000;
+      border-radius: 12px;
+      overflow:hidden;
+      position:relative;
+    }
+    .shade{
+      position:absolute; inset:0;
+      background: linear-gradient(0deg, rgba(0,0,0,.65), rgba(0,0,0,.1) 60%, rgba(0,0,0,0));
+      pointer-events:none;
+    }
+    .vcard{
+      position:relative;
+      padding: clamp(16px, 3vw, 28px);
+      font-size: clamp(16px, 1.8vw, 18px);
+      text-shadow: 0 1px 0 #000;
+    }
+    .name{ font-size: clamp(22px, 2.6vw, 26px); margin:0 0 .5rem 0; }
+    .contact a{ color:var(--ink); text-decoration:none; border-bottom:1px dotted transparent }
+    .contact a:hover{ color:var(--ink-dim); border-color:var(--ink-dim) }
+
+    /* Right column */
+    .menu{
+      display:grid;
+      place-items:center;
+    }
+    .links{
+      display:flex;
+      flex-direction:column;
+      gap: clamp(14px, 2.2vw, 22px);
+      text-align:center;
+    }
+    .links a{
+      color:var(--ink);
+      font-size: clamp(28px, 3.6vw, 44px);
+      text-decoration:none;
+      letter-spacing:.3px;
+      transition: color .15s ease, transform .15s ease;
+    }
+    .links a:hover, .links a:focus{
+      color:var(--ink-dim);
+      transform: translateY(-1px);
+      outline:none;
+    }
+
+    /* Small screens: stack */
+    @media (max-width: 860px){
+      .page{ grid-template-columns: 1fr; }
+      .portrait{ min-height: 52vh; }
+      .links a{ font-size: clamp(22px, 7vw, 36px); }
+    }
+
+    footer{
+      max-width:var(--maxw);
+      margin: 12px auto 24px;
+      color:var(--muted);
+      font-size:14px;
+      padding: 0 clamp(20px, 4vw, 40px);
+    }
+
+    /* reduce motion preference: skip video automatically */
+    @media (prefers-reduced-motion: reduce){
+      .intro{ display:none !important }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Intro Video -->
+  <div class="intro" id="intro">
+    <video id="introVideo"
+           src="assets/Mathaifenn.mp4"
+           playsinline
+           muted
+           autoplay
+           controlslist="nodownload noplaybackrate"
+           preload="auto">
+      Sorry, your browser can’t play this video.
+    </video>
+
+    <div class="controls">
+      <button class="btn" id="toggleSound" aria-pressed="false">Unmute</button>
+      <button class="btn" id="skipIntro">Skip intro</button>
+    </div>
+  </div>
+
+  <!-- Page Content -->
+  <main class="page" id="pageContent" aria-hidden="true">
+    <!-- Left column: portrait + contact -->
+    <section class="portrait" aria-label="Portrait and contact">
+      <div class="shade" aria-hidden="true"></div>
+      <div class="vcard">
+        <h1 class="name">Dr Mathai Fenn</h1>
+        <div class="contact">
+          <div>+91 9980051414</div>
+          <div><a href="mailto:mathai@fenn.net">mathai@fenn.net</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right column: links -->
+    <nav class="menu" aria-label="Primary">
+      <div class="links">
+        <a href="/bio.html">My Bio</a>
+        <a href="/family.html">My family</a>
+        <a href="/thoughts.html">My Thoughts</a>
+        <a href="/projects.html">My Projects</a>
+      </div>
+    </nav>
+  </main>
+
+  <footer>
+    © <span id="yr"></span> Mathai Fenn
+  </footer>
+
+  <script>
+    // Small helper: show page (and hide intro)
+    function revealPage() {
+      document.getElementById('intro').hidden = true;
+      const page = document.getElementById('pageContent');
+      page.removeAttribute('aria-hidden');
+    }
+
+    (function init(){
+      document.getElementById('yr').textContent = new Date().getFullYear();
+
+      const vid = document.getElementById('introVideo');
+      const skip = document.getElementById('skipIntro');
+      const sound = document.getElementById('toggleSound');
+
+      // When the video ends, reveal page
+      vid.addEventListener('ended', revealPage);
+
+      // Skip manually
+      skip.addEventListener('click', () => {
+        try { vid.pause(); } catch(e){}
+        revealPage();
+      });
+
+      // Toggle mute (autoplay policy: starts muted)
+      sound.addEventListener('click', () => {
+        vid.muted = !vid.muted;
+        sound.textContent = vid.muted ? 'Unmute' : 'Mute';
+        sound.setAttribute('aria-pressed', String(!vid.muted));
+        // If user unmutes, ensure it’s playing
+        if (!vid.muted && vid.paused) vid.play().catch(()=>{});
+      });
+
+      // If user has reduced motion preference, don’t show intro
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        revealPage();
+      }
+    })();
+  </script>
+</body>
+</html>

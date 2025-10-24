@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Family — Dr Mathai Fenn</title>
+  <link rel="preload" href="assets/mbfdark.jpg" as="image">
+  <style>
+    :root{ --bg:#0b0b0b; --ink:#e0c078; --ink-dim:#bda260; --muted:#888; --maxw:1200px; }
+    html,body{height:100%; margin:0; background:var(--bg); color:var(--ink); font-family: Georgia, "Times New Roman", Times, serif; line-height:1.55; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    a{color:var(--ink); text-decoration:none} a:hover{color:#f2d78a; text-decoration:underline}
+    .page{ min-height:100%; display:grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 4vw, 56px); max-width: var(--maxw); margin: 0 auto; padding: clamp(20px, 4vw, 40px); box-sizing:border-box; }
+    .portrait{ display:flex; flex-direction:column; justify-content:flex-end; gap: 24px; min-height: calc(100vh - clamp(40px, 8vw, 80px)); background: url("assets/mbfdark.jpg") left top / cover no-repeat #000; border-radius: 12px; overflow:hidden; position:relative; }
+    .shade{ position:absolute; inset:0; background: linear-gradient(0deg, rgba(0,0,0,.65), rgba(0,0,0,.1) 60%, rgba(0,0,0,0)); pointer-events:none; }
+    .vcard{ position:relative; padding: clamp(16px, 3vw, 28px); font-size: clamp(16px, 1.8vw, 18px); text-shadow: 0 1px 0 #000; }
+    .name{ font-size: clamp(22px, 2.6vw, 26px); margin:0 0 .5rem 0; }
+    .contact a{ color:var(--ink); text-decoration:none; border-bottom:1px dotted transparent; } .contact a:hover{ color:var(--ink-dim); border-color:var(--ink-dim); }
+    .main{ display:flex; flex-direction:column; justify-content:center; padding: clamp(20px, 4vw, 40px) 0; }
+    .title{ font-size: clamp(42px, 5vw, 64px); margin:0 0 1rem 0; font-weight:600; line-height:1.1; }
+    .subtitle{ color:var(--ink-dim); font-size: clamp(18px, 2vw, 22px); margin:0 0 2.5rem 0; line-height:1.4; }
+    .content{ font-size: clamp(16px, 1.6vw, 18px); line-height:1.7; color:#d8c58b; max-width:600px; }
+    .content p{ margin:0 0 1.5em 0; } .content p + p{ text-indent:1.5em; }
+    .content-nav{ margin:2.5rem 0 0 0; padding:1.5rem 0 0 0; border-top:1px solid rgba(224, 192, 120, 0.2); }
+    .content-links{ display:flex; flex-wrap:wrap; gap:1rem; }
+    .content-links a{ color:var(--ink); text-decoration:none; font-size:16px; padding:0.5rem 1rem; border:1px solid rgba(224, 192, 120, 0.3); border-radius:6px; transition: all 0.2s ease; }
+    .content-links a:hover{ color:var(--ink-dim); border-color:var(--ink-dim); background:rgba(224, 192, 120, 0.05); transform:translateY(-1px); }
+    .content-links a.active{ color:var(--ink-dim); border-color:var(--ink-dim); background:rgba(224, 192, 120, 0.1); }
+    @media (max-width: 860px){ .page{ grid-template-columns: 1fr; gap: clamp(16px, 3vw, 32px); } .portrait{ min-height: 40vh; } .main{ padding: 0; } .content-links{ justify-content:center; } }
+    footer{ max-width:var(--maxw); margin: 12px auto 24px; color:var(--muted); font-size:14px; padding: 0 clamp(20px, 4vw, 40px); text-align:center; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="portrait" aria-label="Portrait and contact">
+      <div class="shade" aria-hidden="true"></div>
+      <div class="vcard">
+        <h1 class="name">Dr Mathai Fenn</h1>
+        <div class="contact">
+          <div>+91 9980051414</div>
+          <div><a href="mailto:mathai@fenn.net">mathai@fenn.net</a></div>
+        </div>
+      </div>
+    </section>
+    <section class="main">
+      <h1 class="title">Family</h1>
+      <p class="subtitle">Roots · Relationships · Legacy</p>
+      <div class="content">
+        <p>Family has always been the cornerstone of my life. Growing up in a close-knit household taught me the values of compassion, resilience, and unconditional support. These early experiences shaped my understanding of human relationships and continue to influence my work today.</p>
+        <p>My wife, Sarah, and our two children, Anya and Rohan, are my greatest source of inspiration and joy. We believe in creating a home filled with laughter, curiosity, and mutual respect. Our evenings are often spent discussing everything from philosophy to the latest scientific discoveries.</p>
+        <p>Beyond our immediate family, we maintain strong connections with our extended family across different continents. These relationships have given me a deep appreciation for diverse perspectives and the importance of maintaining cultural heritage while embracing modernity.</p>
+      </div>
+      <nav class="content-nav" aria-label="Secondary navigation">
+        <div class="content-links">
+          <a href="index.html">Home</a>
+          <a href="family.html" class="active">Family</a>
+          <a href="thoughts.html">Thoughts</a>
+          <a href="projects.html">Projects</a>
+          <a href="bio.html">Bio</a>
+        </div>
+      </nav>
+    </section>
+  </main>
+  <footer>© <span id="yr"></span> Mathai Fenn</footer>
+  <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+</body>
+</html>
