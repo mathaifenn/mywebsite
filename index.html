@@ -202,50 +202,96 @@
 <script>
   // Small helper: show page (and hide intro)
   function revealPage() {
+    console.log('Revealing page - hiding intro');
     document.getElementById('intro').hidden = true;
     const page = document.getElementById('pageContent');
     page.removeAttribute('aria-hidden');
   }
 
   (function init(){
+    console.log('Script initialized');
+    
     document.getElementById('yr').textContent = new Date().getFullYear();
 
     const vid = document.getElementById('introVideo');
     const skip = document.getElementById('skipIntro');
     const sound = document.getElementById('toggleSound');
 
+    console.log('Video element:', vid);
+    console.log('Video source:', vid.src);
+    console.log('Video muted:', vid.muted);
+    console.log('Video paused:', vid.paused);
+
+    // Debug video events
+    vid.addEventListener('loadeddata', () => {
+      console.log('✅ Video loaded - duration:', vid.duration);
+    });
+    
+    vid.addEventListener('canplay', () => {
+      console.log('✅ Video can play');
+    });
+    
+    vid.addEventListener('play', () => {
+      console.log('✅ Video started playing');
+    });
+    
+    vid.addEventListener('error', (e) => {
+      console.error('❌ Video error:', e);
+      console.error('Video error details:', vid.error);
+    });
+
     // Auto-play with error handling
+    console.log('Attempting to play video...');
     const playPromise = vid.play();
     
     if (playPromise !== undefined) {
-      playPromise.catch(error => {
-        console.log('Autoplay blocked, showing page immediately');
+      playPromise.then(() => {
+        console.log('✅ Autoplay successful');
+      }).catch(error => {
+        console.log('❌ Autoplay blocked:', error);
+        console.log('Showing page immediately');
         revealPage();
       });
     }
 
     // When the video ends, reveal page
-    vid.addEventListener('ended', revealPage);
+    vid.addEventListener('ended', () => {
+      console.log('✅ Video ended normally');
+      revealPage();
+    });
 
     // Skip manually
     skip.addEventListener('click', () => {
+      console.log('Skip button clicked');
       try { vid.pause(); } catch(e){}
       revealPage();
     });
 
-    // Toggle mute (autoplay policy: starts muted)
+    // Toggle mute
     sound.addEventListener('click', () => {
       vid.muted = !vid.muted;
       sound.textContent = vid.muted ? 'Unmute' : 'Mute';
       sound.setAttribute('aria-pressed', String(!vid.muted));
-      // If user unmutes, ensure it's playing
-      if (!vid.muted && vid.paused) vid.play().catch(()=>{});
+      console.log('Sound toggled, muted:', vid.muted);
+      if (!vid.muted && vid.paused) {
+        console.log('Attempting to play unmuted');
+        vid.play().catch(e => console.error('Play failed:', e));
+      }
     });
 
     // If user has reduced motion preference, don't show intro
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      console.log('Reduced motion preference detected');
       revealPage();
     }
+
+    // Fallback: if video doesn't load in 3 seconds, show page
+    setTimeout(() => {
+      if (vid.readyState < 2) { // HAVE_CURRENT_DATA or less
+        console.log('Video not loaded after 3 seconds, showing page');
+        revealPage();
+      }
+    }, 3000);
   })();
 </script>
 </body>
